@@ -8,15 +8,19 @@
 
 ;; define your app data so that it doesn't get over-written on reload
 
-(defonce app-state (atom {:text "Hello Paul!"}))
+(defonce app-state (atom {:list ["Lion" "Zebra" "Buffalo" "Antelope"]}))
+
+(defn stripe [text bgc]
+  (let [st #js {:backgroundColor bgc}]
+    (dom/li #js {:style st} text)))
 
 (om/root
   (fn [data owner]
-    (reify om/IRender
-      (render [_]
-        (dom/p nil (:text data)))))
+    (om/component
+      (apply dom/ul #js {:className "animals"}
+        (map stripe (:list data) (cycle ["#ff0" "#fff"])))))
   app-state
-  {:target (. js/document (getElementById "app"))})
+  {:target (. js/document (getElementById "app0"))})
 
 
 (defn on-js-reload []
